@@ -10,6 +10,7 @@ const DB = require('./data/db');
 DB.init();
 
 const app = express();
+app.set('trust proxy', 1);
 const PORT = process.env.PORT || 3000;
 
 // Setup upload directory
@@ -42,18 +43,56 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(cookieParser());
 app.use(session({
-    secret: 'soniprompts-super-secret-key-2026',
+    secret: 'promptsclub-super-secret-key-2026',
     resave: false,
     saveUninitialized: false,
-    cookie: { maxAge: 30 * 24 * 60 * 60 * 1000 } // 30 days
+    cookie: {
+        maxAge: 365 * 24 * 60 * 60 * 1000, // 1 year session cookie
+        httpOnly: true,
+        sameSite: 'lax'
+    }
 }));
 
-// User authentication context middleware
+// Permanent Auth Helpers (survives server sleep, reboots and redeploys)
+function setAuthCookie(res, user) {
+    if (!user || !user.id || !user.password_hash) return;
+    const token = `${user.id}:${user.password_hash.slice(-12)}`;
+    res.cookie('pc_auth', token, {
+        maxAge: 365 * 24 * 60 * 60 * 1000, // 1 Year Persistent Login
+        httpOnly: true,
+        sameSite: 'lax'
+    });
+}
+
+function clearAuthCookie(res) {
+    res.clearCookie('pc_auth');
+}
+
+// User authentication context middleware with auto-restore
 app.use((req, res, next) => {
     let user = null;
     if (req.session && req.session.userId) {
         user = DB.getUserById(req.session.userId);
     }
+
+    // Auto-restore session from permanent auth cookie if memory was wiped by server restart/sleep!
+    if (!user && req.cookies && req.cookies.pc_auth) {
+        try {
+            const parts = req.cookies.pc_auth.split(':');
+            const uid = parseInt(parts[0], 10);
+            const hashSnippet = parts[1];
+            const candidate = DB.getUserById(uid);
+            if (candidate && candidate.password_hash && candidate.password_hash.slice(-12) === hashSnippet) {
+                user = candidate;
+                if (req.session) {
+                    req.session.userId = user.id; // Restore session in memory
+                }
+            }
+        } catch (e) {
+            // ignore invalid cookie format
+        }
+    }
+
     res.locals.currentUser = user;
     res.locals.currentPath = req.path;
     res.locals.totalPrompts = DB.getPrompts().length;
@@ -276,6 +315,7 @@ app.post(['/login.php', '/login'], (req, res) => {
     }
 
     req.session.userId = user.id;
+    setAuthCookie(res, user);
     res.redirect(next || '/browse.php');
 });
 
@@ -329,11 +369,13 @@ app.post(['/register.php', '/register'], (req, res) => {
     });
 
     req.session.userId = newUser.id;
+    setAuthCookie(res, newUser);
     res.redirect(next || '/browse.php');
 });
 
 // 8. Auth - Logout
 app.get(['/logout.php', '/logout'], (req, res) => {
+    clearAuthCookie(res);
     req.session.destroy(() => {
         res.redirect('/');
     });
