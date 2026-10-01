@@ -1,0 +1,72 @@
+<%- include('partials/header') %>
+
+<!-- ═══════════════════════════════════════════════════
+     CLEAN DIRECT MASTER PROMPTS (WHITE BACKGROUND)
+     ═══════════════════════════════════════════════════ -->
+<div class="container" style="padding-top: 24px; padding-bottom: 60px;">
+
+    <!-- Category & Type Filter Pills (Direct, No Search Bar) -->
+    <div style="margin-bottom: 24px;">
+        <div class="direct-pills">
+            <a href="/browse.php" class="pill active">All Prompts (<%= totalPrompts %>)</a>
+            <a href="/browse.php?type=free" class="pill">🎁 Free Prompt (1)</a>
+            <a href="/browse.php?type=premium" class="pill">⭐ Premium Prompts (19)</a>
+            <% categories.forEach(function(c) { %>
+                <a href="/browse.php?cat=<%= encodeURIComponent(c.name) %>" class="pill">
+                    <%= c.name %> (<%= c.count %>)
+                </a>
+            <% }); %>
+        </div>
+    </div>
+
+    <!-- DIRECT MASTER PROMPTS GRID -->
+    <div class="card-grid">
+        <% prompts.forEach(function(prompt) { 
+            const isFree = prompt.type === 'free';
+            const isLocked = !isFree && (!currentUser || !currentUser.is_pro);
+        %>
+            <div class="prompt-card">
+                <div class="card-media">
+                    <img src="<%= prompt.image %>" alt="<%= prompt.title %>" loading="lazy" decoding="async" onerror="this.src='/assets/img/cover.jpg'">
+                    <span class="card-tag"><%= prompt.category %></span>
+                    <% if (isFree) { %>
+                        <span class="card-price-badge badge-free">FREE</span>
+                    <% } else { %>
+                        <span class="card-price-badge badge-premium">PREMIUM</span>
+                    <% } %>
+                </div>
+                <div class="card-info">
+                    <h3><a href="/prompt.php?id=<%= prompt.id %>"><%= prompt.title %></a></h3>
+                    <p class="card-teaser">
+                        <%= prompt.teaser ? prompt.teaser.substring(0, 95) + '…' : 'Full multi-scene master prompt with camera angles, motion control & lighting instructions.' %>
+                    </p>
+                </div>
+                <div class="card-action">
+                    <% if (isFree) { %>
+                        <a href="/prompt.php?id=<%= prompt.id %>" class="btn btn-green btn-block btn-sm">
+                            Get Free Prompt →
+                        </a>
+                    <% } else if (isLocked) { %>
+                        <a href="/prompt.php?id=<%= prompt.id %>" class="btn btn-primary btn-block btn-sm">
+                            Unlock Master Prompt →
+                        </a>
+                    <% } else { %>
+                        <a href="/prompt.php?id=<%= prompt.id %>" class="btn btn-outline btn-block btn-sm">
+                            View Master Prompt 📋
+                        </a>
+                    <% } %>
+                </div>
+            </div>
+        <% }); %>
+    </div>
+
+    <!-- Bottom Browse All Prompts Button -->
+    <div style="text-align: center; margin-top: 40px;">
+        <a href="/browse.php" class="btn btn-primary btn-lg" style="box-shadow: 0 4px 14px rgba(99, 102, 241, 0.3);">
+            Browse All <%= totalPrompts %> Prompts in Library →
+        </a>
+    </div>
+
+</div>
+
+<%- include('partials/footer') %>

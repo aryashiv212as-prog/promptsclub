@@ -1,0 +1,116 @@
+<%- include('partials/header') %>
+
+<div class="container" style="padding-top:40px;padding-bottom:60px;">
+
+    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px;margin-bottom:30px;">
+        <div>
+            <h1 class="section-title" style="margin:0;">My Account</h1>
+            <p class="section-sub" style="margin:4px 0 0;">Manage your profile, subscription, and saved prompts</p>
+        </div>
+        <div style="display:flex;gap:10px;">
+            <% if (currentUser.role === 'admin') { %>
+                <a href="/admin" class="btn btn-outline">⚙️ Admin Dashboard</a>
+            <% } %>
+            <a href="/logout.php" class="btn btn-outline" style="color:var(--red);">Log Out</a>
+        </div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(300px, 1fr));gap:24px;margin-bottom:40px;">
+        
+        <!-- Profile Card -->
+        <div style="background:#fff;border-radius:var(--radius);padding:26px;border:1.5px solid var(--border);box-shadow:var(--shadow-sm);">
+            <div style="display:flex;align-items:center;gap:14px;margin-bottom:20px;">
+                <div style="width:60px;height:60px;border-radius:50%;background:linear-gradient(135deg, #7C5CFF, #A78BFA);color:#fff;display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:800;">
+                    <%= currentUser.name.charAt(0).toUpperCase() %>
+                </div>
+                <div>
+                    <h3 style="margin:0;font-size:18px;"><%= currentUser.name %></h3>
+                    <p style="margin:0;color:var(--muted);font-size:14px;"><%= currentUser.email %></p>
+                </div>
+            </div>
+            <div style="border-top:1px solid var(--border);padding-top:16px;">
+                <div style="display:flex;justify-content:space-between;margin-bottom:10px;font-size:14px;">
+                    <span style="color:var(--muted);">Account Type:</span>
+                    <strong><%= currentUser.role.toUpperCase() %></strong>
+                </div>
+                <div style="display:flex;justify-content:space-between;font-size:14px;">
+                    <span style="color:var(--muted);">Member Since:</span>
+                    <span><%= currentUser.created_at || 'Sep 2026' %></span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Membership Card -->
+        <div style="background:#fff;border-radius:var(--radius);padding:26px;border:1.5px solid var(--border);box-shadow:var(--shadow-sm);">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+                <h3 style="margin:0;font-size:18px;">Subscription Plan</h3>
+                <% if (currentUser.is_pro) { %>
+                    <span class="badge-pro">⭐ PRO ACTIVE</span>
+                <% } else { %>
+                    <span class="badge-free">FREE PLAN</span>
+                <% } %>
+            </div>
+
+            <% if (currentUser.is_pro) { %>
+                <p style="font-size:14px;color:var(--text);margin-bottom:14px;">
+                    You have unlocked complete access to all 365+ video prompts, storyboard downloads, and weekly releases!
+                </p>
+                <div style="background:#f5f3ff;border:1px solid #ddd6fe;padding:12px;border-radius:10px;font-size:13px;color:#5b21b6;margin-bottom:16px;">
+                    📅 <strong>Active Until:</strong> <%= currentUser.plan_expires || '2027-12-31' %>
+                </div>
+                <form method="post" action="/account.php/toggle-pro">
+                    <button type="submit" class="btn btn-outline btn-sm btn-block" style="color:var(--muted);">
+                        Switch to Free Plan (Test Toggle)
+                    </button>
+                </form>
+            <% } else { %>
+                <p style="font-size:14px;color:var(--muted);margin-bottom:18px;">
+                    Upgrade to Pro to unlock all master prompt codes, camera setups, timing formulas, and community post creation.
+                </p>
+                <div style="display:flex;gap:10px;flex-wrap:wrap;">
+                    <a href="/pricing.php" class="btn btn-primary btn-block">Upgrade to PRO — $10/mo</a>
+                    <form method="post" action="/account.php/toggle-pro" style="width:100%;">
+                        <button type="submit" class="btn btn-outline btn-sm btn-block" style="margin-top:8px;">
+                            ⚡ Instant 1-Click PRO Activation (Demo)
+                        </button>
+                    </form>
+                </div>
+            <% } %>
+        </div>
+
+    </div>
+
+    <!-- Saved Prompts / Bookmarks Section -->
+    <h2 class="plist-head" style="margin-bottom:16px;">Saved / Bookmarked Prompts</h2>
+    <% if (bookmarkedPrompts.length === 0) { %>
+        <div style="background:#fff;border-radius:var(--radius);padding:40px 20px;text-align:center;border:1.5px solid var(--border);">
+            <p style="color:var(--muted);margin-bottom:12px;">You haven't bookmarked any prompts yet.</p>
+            <a href="/browse.php" class="btn btn-primary btn-sm">Explore Prompts</a>
+        </div>
+    <% } else { %>
+        <div class="grid">
+            <% bookmarkedPrompts.forEach(function(prompt) { %>
+                <div class="pcard">
+                    <div class="pcard-thumb">
+                        <img src="<%= prompt.image %>" alt="" loading="lazy" width="660" height="371" onerror="this.src='/assets/img/cover.jpg'">
+                        <% if (prompt.type === 'premium') { %>
+                            <span class="lock-badge">🔒 Premium</span>
+                        <% } else { %>
+                            <span class="lock-badge" style="background:#16a34a;color:#fff;">🎁 Free</span>
+                        <% } %>
+                    </div>
+                    <div class="pcard-body">
+                        <span class="pcard-cat"><%= prompt.category %></span>
+                        <h3 class="pcard-title"><a href="/prompt.php?id=<%= prompt.id %>"><%= prompt.title %></a></h3>
+                    </div>
+                    <div class="pcard-foot">
+                        <a href="/prompt.php?id=<%= prompt.id %>" class="btn btn-sm btn-primary btn-block">Open Prompt</a>
+                    </div>
+                </div>
+            <% }); %>
+        </div>
+    <% } %>
+
+</div>
+
+<%- include('partials/footer') %>

@@ -1,0 +1,55 @@
+[
+  {
+    "id": 8,
+    "user_id": 1,
+    "author_name": "shlendrasoni",
+    "author_avatar": "S",
+    "is_creator": true,
+    "created_at": "30 Aug 2026 · 07:01",
+    "text": "## MASTER PROMPT USE GUIDE\n\nA Master Prompt is not a normal one-time prompt. It is a complete reusable AI system where the character, camera style, story DNA, duration, audio, continuity, negative rules, and output format are already defined.\n\n**Simple workflow:**\n\n1. Open a new ChatGPT or Claude chat and paste the complete Master Prompt.\n2. Type: **“Give me 10 topics.”**\n3. Select your favorite idea: **“Topic 4.”**\n4. Then type: **“Make full prompt.”**\n5. For changes, do not paste the full Master Prompt again. Simply say: **“Keep everything the same, change the location,” “make the hook stronger,” “make it 15 seconds,” “make the ending funnier,” or “keep the same character.”**\n6. For more ideas, type: **“Give me 10 more topics”** or **“Next video.”**\n\nThink of the Master Prompt as your permanent **Creative Director + Script Writer + Camera Director + Prompt Engineer.**\n\n**The Master Prompt defines HOW to create.\nYour next command defines WHAT to create.**\n\nFor a new chat, paste the Master Prompt again for the safest workflow.",
+    "image_url": null,
+    "likes": 19,
+    "liked_by": [],
+    "comments": [
+      {
+        "id": 1,
+        "author": "John",
+        "text": "Hello bhai iske jaise promte bna do aur page name Look in History",
+        "created_at": "30 Aug 2026"
+      }
+    ]
+  },
+  {
+    "id": 5,
+    "user_id": 4,
+    "author_name": "Arman",
+    "author_avatar": "A",
+    "is_creator": false,
+    "created_at": "22 Aug 2026 · 07:52",
+    "text": "post viral nahi ho raha keya karu bhai?",
+    "image_url": null,
+    "likes": 7,
+    "liked_by": [],
+    "comments": [
+      {
+        "id": 2,
+        "author": "Shailendra Soni",
+        "text": "Bhai hook pe focus karo! 0-3 second ka visual zoom and audio hook use karo jo Master Prompt mein diya hai.",
+        "created_at": "22 Aug 2026"
+      }
+    ]
+  },
+  {
+    "id": 4,
+    "user_id": 5,
+    "author_name": "Gobango",
+    "author_avatar": "G",
+    "is_creator": false,
+    "created_at": "22 Aug 2026 · 05:30",
+    "text": "story board ko kaisay use krein kisi bhi prompt say video generation ky liye",
+    "image_url": null,
+    "likes": 4,
+    "liked_by": [],
+    "comments": []
+  }
+]

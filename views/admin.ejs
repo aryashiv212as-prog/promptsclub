@@ -1,0 +1,241 @@
+<%- include('partials/header') %>
+
+<div class="container" style="padding-top:40px;padding-bottom:60px;">
+
+    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px;margin-bottom:30px;">
+        <div>
+            <h1 class="section-title" style="margin:0;">⚙️ Admin Dashboard</h1>
+            <p class="section-sub" style="margin:4px 0 0;">Manage your prompt library, categories, and users</p>
+        </div>
+        <div style="display:flex;gap:10px;">
+            <a href="/admin/new-prompt" class="btn btn-primary">+ Add New Prompt</a>
+            <a href="/browse.php" class="btn btn-outline">Live Site View</a>
+        </div>
+    </div>
+
+    <% if (typeof saved !== 'undefined' && saved === 'settings') { %>
+        <div style="background:#dcfce7;color:#15803d;padding:14px 20px;border-radius:12px;margin-bottom:24px;font-weight:600;display:flex;align-items:center;gap:10px;border:1.5px solid #86efac;">
+            <span>✅</span>
+            <span>Payment and PayPal settings have been saved successfully!</span>
+        </div>
+    <% } %>
+
+    <!-- Quick Stats Cards -->
+    <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(200px, 1fr));gap:16px;margin-bottom:32px;">
+        <div style="background:#fff;border-radius:12px;padding:20px;border:1.5px solid var(--border);box-shadow:var(--shadow-sm);">
+            <div style="font-size:13px;color:var(--muted);font-weight:600;text-transform:uppercase;">Total Prompts</div>
+            <div style="font-size:32px;font-weight:800;color:var(--primary);margin-top:6px;"><%= stats.total %></div>
+        </div>
+        <div style="background:#fff;border-radius:12px;padding:20px;border:1.5px solid var(--border);box-shadow:var(--shadow-sm);">
+            <div style="font-size:13px;color:var(--muted);font-weight:600;text-transform:uppercase;">Premium Prompts</div>
+            <div style="font-size:32px;font-weight:800;color:#6847E8;margin-top:6px;"><%= stats.premium %></div>
+        </div>
+        <div style="background:#fff;border-radius:12px;padding:20px;border:1.5px solid var(--border);box-shadow:var(--shadow-sm);">
+            <div style="font-size:13px;color:var(--muted);font-weight:600;text-transform:uppercase;">Free Prompts</div>
+            <div style="font-size:32px;font-weight:800;color:var(--green);margin-top:6px;"><%= stats.free %></div>
+        </div>
+        <div style="background:#fff;border-radius:12px;padding:20px;border:1.5px solid var(--border);box-shadow:var(--shadow-sm);">
+            <div style="font-size:13px;color:var(--muted);font-weight:600;text-transform:uppercase;">Total Users</div>
+            <div style="font-size:32px;font-weight:800;color:var(--text);margin-top:6px;"><%= stats.users %></div>
+        </div>
+    </div>
+
+    <!-- 💳 PayPal & Payment Settings -->
+    <div style="background:#fff;border-radius:var(--radius);padding:24px;border:1.5px solid var(--border);margin-bottom:36px;box-shadow:var(--shadow-sm);">
+        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:16px;">
+            <div>
+                <h2 style="font-size:20px;margin:0;">💳 PayPal &amp; Pricing Configuration</h2>
+                <p style="font-size:13px;color:var(--muted);margin:4px 0 0;">Money from user purchases goes directly to your configured PayPal account.</p>
+            </div>
+            <span style="font-size:12px;padding:4px 10px;border-radius:999px;font-weight:700;background:<%= (typeof settings !== 'undefined' && settings.paypal_mode === 'live') ? '#dcfce7;color:#15803d;' : '#fef3c7;color:#b45309;' %>">
+                ● <%= (typeof settings !== 'undefined' && settings.paypal_mode === 'live') ? 'LIVE PRODUCTION MODE' : 'SANDBOX / TEST MODE' %>
+            </span>
+        </div>
+
+        <form method="post" action="/admin/settings">
+            <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(280px, 1fr));gap:18px;">
+                <div class="fld" style="margin-bottom:0;">
+                    <label style="font-weight:600;font-size:13px;">Your PayPal Client ID</label>
+                    <input type="text" name="paypal_client_id" value="<%= (typeof settings !== 'undefined' && settings.paypal_client_id) ? settings.paypal_client_id : 'sb' %>" required placeholder="From developer.paypal.com (or 'sb' for sandbox)" style="font-family:monospace;font-size:13px;">
+                    <small style="color:var(--muted);font-size:11.5px;display:block;margin-top:4px;">Get this from <a href="https://developer.paypal.com/dashboard/applications" target="_blank" style="color:var(--primary);font-weight:600;">developer.paypal.com</a> → Apps &amp; Credentials.</small>
+                </div>
+
+                <div class="fld" style="margin-bottom:0;">
+                    <label style="font-weight:600;font-size:13px;">PayPal Mode</label>
+                    <select name="paypal_mode" style="width:100%;padding:11px 14px;border:1.5px solid var(--border);border-radius:12px;background:#fff;font-family:inherit;font-size:14px;">
+                        <option value="sandbox" <%= (typeof settings !== 'undefined' && settings.paypal_mode === 'sandbox') ? 'selected' : '' %>>Sandbox (Testing / Demo)</option>
+                        <option value="live" <%= (typeof settings !== 'undefined' && settings.paypal_mode === 'live') ? 'selected' : '' %>>Live (Real Money / Production)</option>
+                    </select>
+                    <small style="color:var(--muted);font-size:11.5px;display:block;margin-top:4px;">Switch to Live when you are ready to accept real payments.</small>
+                </div>
+
+                <div class="fld" style="margin-bottom:0;">
+                    <label style="font-weight:600;font-size:13px;">Currency Code</label>
+                    <input type="text" name="paypal_currency" value="<%= (typeof settings !== 'undefined' && settings.paypal_currency) ? settings.paypal_currency : 'USD' %>" required placeholder="USD, EUR, GBP, AUD, etc." style="text-transform:uppercase;">
+                </div>
+
+                <div class="fld" style="margin-bottom:0;">
+                    <label style="font-weight:600;font-size:13px;">Monthly Price ($ USD)</label>
+                    <input type="number" step="0.01" name="price_monthly" value="<%= (typeof settings !== 'undefined' && settings.price_monthly) ? settings.price_monthly : 5 %>" required>
+                </div>
+
+                <div class="fld" style="margin-bottom:0;">
+                    <label style="font-weight:600;font-size:13px;">Monthly Price (₹ INR / UPI)</label>
+                    <input type="number" name="price_inr" value="<%= (typeof settings !== 'undefined' && settings.price_inr) ? settings.price_inr : 499 %>" required>
+                </div>
+
+                <div class="fld" style="margin-bottom:0;">
+                    <label style="font-weight:600;font-size:13px;">WhatsApp Support Number (Manual Access/UPI)</label>
+                    <input type="text" name="whatsapp_number" value="<%= (typeof settings !== 'undefined' && settings.whatsapp_number) ? settings.whatsapp_number : '9341266089' %>" placeholder="9341266089">
+                </div>
+            </div>
+
+            <div style="display:flex;justify-content:flex-end;margin-top:20px;">
+                <button type="submit" class="btn btn-primary" style="padding:10px 24px;">💾 Save Payment Settings</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- User Management Table -->
+    <div style="background:#fff;border-radius:var(--radius);padding:24px;border:1.5px solid var(--border);margin-bottom:36px;box-shadow:var(--shadow-sm);">
+        <div style="margin-bottom:16px;">
+            <h2 style="font-size:20px;margin:0 0 6px;">👥 Registered Users &amp; Manual Access Control</h2>
+            <div style="background:#eff6ff;border:1px solid #bfdbfe;color:#1e40af;padding:10px 14px;border-radius:10px;font-size:13px;line-height:1.5;">
+                💡 <b>Manual Access Guide:</b> If a user pays you via GPay, PhonePe, Paytm, Bank Transfer, or Cash, tell them to register an account. Then find their email below and click <b>"Grant Pro"</b>. Their account will be instantly unlocked without PayPal!
+            </div>
+        </div>
+        <div style="overflow-x:auto;">
+            <table style="width:100%;border-collapse:collapse;font-size:14px;text-align:left;">
+                <thead>
+                    <tr style="border-bottom:2px solid var(--border);color:var(--muted);">
+                        <th style="padding:10px;">ID</th>
+                        <th style="padding:10px;">Name</th>
+                        <th style="padding:10px;">Email</th>
+                        <th style="padding:10px;">Role</th>
+                        <th style="padding:10px;">Subscription</th>
+                        <th style="padding:10px;text-align:right;">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% users.forEach(function(u) { %>
+                        <tr style="border-bottom:1px solid var(--border);">
+                            <td style="padding:12px 10px;">#<%= u.id %></td>
+                            <td style="padding:12px 10px;font-weight:600;"><%= u.name %></td>
+                            <td style="padding:12px 10px;color:var(--muted);"><%= u.email %></td>
+                            <td style="padding:12px 10px;"><span style="text-transform:uppercase;font-size:12px;font-weight:700;"><%= u.role %></span></td>
+                            <td style="padding:12px 10px;">
+                                <% if (u.is_pro) { %>
+                                    <span class="badge-pro">⭐ PRO</span>
+                                <% } else { %>
+                                    <span class="badge-free">FREE</span>
+                                <% } %>
+                            </td>
+                            <td style="padding:12px 10px;text-align:right;">
+                                <form method="post" action="/admin/toggle-user-pro" style="display:inline;">
+                                    <input type="hidden" name="user_id" value="<%= u.id %>">
+                                    <button type="submit" class="btn btn-sm <%= u.is_pro ? 'btn-outline' : 'btn-primary' %>">
+                                        <%= u.is_pro ? 'Revoke Pro' : 'Grant Pro' %>
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                    <% }); %>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Prompts Management Table -->
+    <div style="background:#fff;border-radius:var(--radius);padding:24px;border:1.5px solid var(--border);box-shadow:var(--shadow-sm);">
+        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;margin-bottom:16px;">
+            <div>
+                <h2 style="font-size:20px;margin:0;">📚 Prompts Catalogue (<span id="prompt-count-display"><%= prompts.length %></span>)</h2>
+                <p style="font-size:13px;color:var(--muted);margin:2px 0 0;">Add new prompts or remove existing ones with 1 click.</p>
+            </div>
+            <div style="display:flex;gap:10px;align-items:center;">
+                <input type="text" id="admin-prompt-filter" placeholder="🔍 Search prompts by title or category…" oninput="filterAdminPrompts(this.value)" style="padding:8px 14px;border:1.5px solid var(--border);border-radius:10px;font-size:13px;min-width:240px;">
+                <a href="/admin/new-prompt" class="btn btn-sm btn-primary">+ Add New</a>
+            </div>
+        </div>
+        <div style="overflow-x:auto;">
+            <table style="width:100%;border-collapse:collapse;font-size:14px;text-align:left;" id="admin-prompts-table">
+                <thead>
+                    <tr style="border-bottom:2px solid var(--border);color:var(--muted);">
+                        <th style="padding:10px;width:70px;">Thumb</th>
+                        <th style="padding:10px;">Title</th>
+                        <th style="padding:10px;">Category</th>
+                        <th style="padding:10px;">Type</th>
+                        <th style="padding:10px;text-align:right;">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% prompts.forEach(function(p, idx) { %>
+                        <tr class="prompt-row-item" style="border-bottom:1px solid var(--border);<%= idx >= 50 ? 'display:none;' : '' %>" data-title="<%= (p.title || '').toLowerCase() %>" data-cat="<%= (p.category || '').toLowerCase() %>">
+                            <td style="padding:10px;">
+                                <img src="<%= p.image %>" alt="" style="width:50px;height:32px;object-fit:cover;border-radius:6px;display:block;" onerror="this.src='/assets/img/cover.jpg'">
+                            </td>
+                            <td style="padding:10px;font-weight:600;">
+                                <a href="/prompt.php?id=<%= p.id %>" target="_blank" style="color:var(--text);text-decoration:none;"><%= p.title %></a>
+                            </td>
+                            <td style="padding:10px;color:var(--muted);"><%= p.category %></td>
+                            <td style="padding:10px;">
+                                <% if (p.type === 'premium') { %>
+                                    <span class="badge-pro" style="font-size:10px;">PREMIUM</span>
+                                <% } else { %>
+                                    <span class="badge-free" style="font-size:10px;">FREE</span>
+                                <% } %>
+                            </td>
+                            <td style="padding:10px;text-align:right;white-space:nowrap;">
+                                <a href="/prompt.php?id=<%= p.id %>" class="btn btn-sm btn-outline" style="padding:4px 10px;font-size:12px;" target="_blank">View</a>
+                                <form method="post" action="/admin/delete-prompt" style="display:inline;" onsubmit="return confirm('Are you sure you want to delete prompt #<%= p.id %>: <%= p.title.replace(/'/g, '') %>?');">
+                                    <input type="hidden" name="prompt_id" value="<%= p.id %>">
+                                    <button type="submit" class="btn btn-sm btn-danger" style="padding:4px 10px;font-size:12px;background:#ef4444;color:#fff;border:none;">Delete</button>
+                                </form>
+                            </td>
+                        </tr>
+                    <% }); %>
+                </tbody>
+            </table>
+            <% if (prompts.length > 50) { %>
+                <div id="show-all-wrap" style="text-align:center;margin-top:16px;">
+                    <p style="font-size:13px;color:var(--muted);margin-bottom:8px;">Showing top 50 of <%= prompts.length %> prompts.</p>
+                    <button type="button" class="btn btn-sm btn-outline" onclick="showAllAdminPrompts()">Show All <%= prompts.length %> Prompts</button>
+                </div>
+            <% } %>
+        </div>
+    </div>
+
+</div>
+
+<script>
+function filterAdminPrompts(query) {
+    const q = (query || '').toLowerCase().trim();
+    const rows = document.querySelectorAll('.prompt-row-item');
+    const showAllWrap = document.getElementById('show-all-wrap');
+    if (showAllWrap) showAllWrap.style.display = q ? 'none' : 'block';
+
+    let count = 0;
+    rows.forEach(r => {
+        const title = r.getAttribute('data-title') || '';
+        const cat = r.getAttribute('data-cat') || '';
+        if (!q || title.includes(q) || cat.includes(q)) {
+            r.style.display = '';
+            count++;
+        } else {
+            r.style.display = 'none';
+        }
+    });
+
+    const display = document.getElementById('prompt-count-display');
+    if (display) display.textContent = count;
+}
+
+function showAllAdminPrompts() {
+    const rows = document.querySelectorAll('.prompt-row-item');
+    rows.forEach(r => r.style.display = '');
+    const showAllWrap = document.getElementById('show-all-wrap');
+    if (showAllWrap) showAllWrap.style.display = 'none';
+}
+</script>
+
+<%- include('partials/footer') %>

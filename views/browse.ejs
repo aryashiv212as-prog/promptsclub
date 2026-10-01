@@ -1,0 +1,129 @@
+<%- include('partials/header') %>
+
+<div class="container" style="padding-top:36px;">
+
+    <h1 class="section-title">All Prompts</h1>
+    <p class="section-sub"><%= totalPrompts %> prompts available</p>
+
+    <div class="filters">
+        <form class="search-form" method="get" action="/browse.php">
+            <input type="text" name="q" placeholder="Search prompts…" value="<%= currentQuery %>">
+            <% if (currentType) { %><input type="hidden" name="type" value="<%= currentType %>"><% } %>
+            <% if (currentCat) { %><input type="hidden" name="cat" value="<%= currentCat %>"><% } %>
+            <select name="sort" onchange="this.form.submit()"
+                    style="padding:11px 14px;border:1.5px solid var(--border);border-radius:999px;background:#fff;color:var(--text);font-family:inherit;font-size:13.5px;font-weight:600;cursor:pointer;">
+                <option value="new" <%= currentSort === 'new' ? 'selected' : '' %>>Newest First</option>
+                <option value="old" <%= currentSort === 'old' ? 'selected' : '' %>>Oldest First</option>
+                <option value="az" <%= currentSort === 'az' ? 'selected' : '' %>>Name A–Z</option>
+                <option value="za" <%= currentSort === 'za' ? 'selected' : '' %>>Name Z–A</option>
+            </select>
+            <button type="submit" class="btn btn-primary">Search</button>
+            <% if (currentQuery || currentType || currentCat) { %>
+                <a href="/browse.php" class="btn btn-outline" style="padding:11px 16px;">Clear</a>
+            <% } %>
+        </form>
+
+        <!-- Type Filter Pills -->
+        <div class="cat-pills" style="margin-bottom:10px;">
+            <a href="/browse.php<%= currentCat ? '?cat=' + encodeURIComponent(currentCat) : '' %>" 
+               class="pill <%= !currentType ? 'active' : '' %>">All Prompts</a>
+            <a href="/browse.php?type=free<%= currentCat ? '&cat=' + encodeURIComponent(currentCat) : '' %>" 
+               class="pill <%= currentType === 'free' ? 'active' : '' %>">🎁 Free</a>
+            <a href="/browse.php?type=premium<%= currentCat ? '&cat=' + encodeURIComponent(currentCat) : '' %>" 
+               class="pill <%= currentType === 'premium' ? 'active' : '' %>">⭐ Premium</a>
+        </div>
+
+        <!-- Category Filter Pills -->
+        <div class="cat-pills">
+            <a href="/browse.php<%= currentType ? '?type=' + currentType : '' %>" 
+               class="pill <%= !currentCat ? 'active' : '' %>">All Categories</a>
+            <% categories.forEach(function(c) { %>
+                <a href="/browse.php?cat=<%= encodeURIComponent(c.name) %><%= currentType ? '&type=' + currentType : '' %>" 
+                   class="pill <%= currentCat === c.name ? 'active' : '' %>">
+                    <%= c.name %> (<%= c.count %>)
+                </a>
+            <% }); %>
+        </div>
+    </div>
+
+    <!-- Membership Upgrade Banner for Non-Pro -->
+    <% if (!currentUser || !currentUser.is_pro) { %>
+        <div class="upgrade-banner">
+            <span>🔒 Subscribe to unlock all <%= totalPrompts %> prompts — full text, camera specs &amp; copy button</span>
+            <a href="/pricing.php" class="btn btn-primary btn-sm">Get Pro Access — $10/mo</a>
+        </div>
+    <% } else { %>
+        <div class="upgrade-banner" style="background:#ECFDF5; border-color:#A7F3D0;">
+            <span style="color:#065F46; font-weight:700;">⭐ PRO UNLOCKED: You have full access to all <%= totalPrompts %> prompts and weekly drops.</span>
+            <a href="/browse.php" class="btn btn-green btn-sm">Full Library Unlocked</a>
+        </div>
+    <% } %>
+
+    <!-- Prompts Grid -->
+    <div class="card-grid">
+        <% if (prompts.length === 0) { %>
+            <div style="grid-column: 1 / -1; text-align:center; padding: 60px 20px;">
+                <p style="font-size:18px; color:var(--text-muted);">No prompts found matching your criteria.</p>
+                <a href="/browse.php" class="btn btn-primary" style="margin-top:12px;">Reset Filters</a>
+            </div>
+        <% } %>
+
+        <% prompts.forEach(function(prompt) { 
+            const isLocked = prompt.type === 'premium' && (!currentUser || !currentUser.is_pro);
+        %>
+            <div class="prompt-card">
+                <div class="card-media">
+                    <img src="<%= prompt.image %>" alt="<%= prompt.title %>" loading="lazy" decoding="async" onerror="this.src='/assets/img/cover.jpg'">
+                    <span class="card-tag"><%= prompt.category %></span>
+                    <% if (prompt.type === 'premium') { %>
+                        <span class="card-price-badge badge-premium">PREMIUM</span>
+                    <% } else { %>
+                        <span class="card-price-badge badge-free">FREE</span>
+                    <% } %>
+                </div>
+                <div class="card-info">
+                    <h3><a href="/prompt.php?id=<%= prompt.id %>"><%= prompt.title %></a></h3>
+                    <p class="card-teaser">
+                        <%= prompt.teaser ? prompt.teaser.substring(0, 95) + '…' : 'Production-grade scene structure, camera specs, DaVinci grading & negative rules.' %>
+                    </p>
+                </div>
+                <div class="card-action">
+                    <% if (isLocked) { %>
+                        <a href="/prompt.php?id=<%= prompt.id %>" class="btn btn-primary btn-block btn-sm">Unlock Master Prompt →</a>
+                    <% } else if (prompt.type === 'free') { %>
+                        <a href="/prompt.php?id=<%= prompt.id %>" class="btn btn-green btn-block btn-sm">Get Free Prompt →</a>
+                    <% } else { %>
+                        <a href="/prompt.php?id=<%= prompt.id %>" class="btn btn-outline btn-block btn-sm">View Master Prompt 📋</a>
+                    <% } %>
+                </div>
+            </div>
+        <% }); %>
+    </div>
+
+    <!-- Pagination -->
+    <% if (totalPages > 1) { %>
+        <div class="pagination">
+            <% if (currentPage > 1) { %>
+                <a href="<%= getPageUrl(currentPage - 1) %>" class="page-link">← Prev</a>
+            <% } %>
+
+            <% 
+            let startPage = Math.max(1, currentPage - 3);
+            let endPage = Math.min(totalPages, startPage + 6);
+            if (endPage - startPage < 6) {
+                startPage = Math.max(1, endPage - 6);
+            }
+            for (let i = startPage; i <= endPage; i++) { 
+            %>
+                <a href="<%= getPageUrl(i) %>" class="page-link <%= i === currentPage ? 'active' : '' %>"><%= i %></a>
+            <% } %>
+
+            <% if (currentPage < totalPages) { %>
+                <a href="<%= getPageUrl(currentPage + 1) %>" class="page-link">Next →</a>
+            <% } %>
+        </div>
+    <% } %>
+
+</div>
+
+<%- include('partials/footer') %>

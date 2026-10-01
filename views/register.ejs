@@ -1,0 +1,37 @@
+<%- include('partials/header') %>
+
+<div class="auth-box">
+    <div class="auth-card">
+        <h1>Create Account</h1>
+        <p style="color:var(--muted);font-size:14px;margin-bottom:20px;">Join PromptsClub (promptsclub.com) for viral AI video prompts</p>
+        
+        <% if (error) { %>
+            <div style="background:#fee2e2;color:#dc2626;padding:10px 14px;border-radius:10px;font-size:14px;margin-bottom:16px;">
+                <%= error %>
+            </div>
+        <% } %>
+
+        <form method="post" action="/register.php">
+            <input type="hidden" name="next" value="<%= nextUrl %>">
+            <div class="fld">
+                <label>Full Name</label>
+                <input type="text" name="name" required placeholder="e.g. Rahul Sharma" value="<%= name || '' %>">
+            </div>
+            <div class="fld">
+                <label>Email</label>
+                <input type="email" name="email" required placeholder="you@example.com" value="<%= email || '' %>">
+            </div>
+            <div class="fld">
+                <label>Password</label>
+                <input type="password" name="password" required placeholder="Choose a password (min 6 characters)">
+            </div>
+            <button type="submit" class="btn btn-primary btn-block">Create Free Account</button>
+        </form>
+
+        <p class="auth-alt" style="margin-top:20px;">
+            Already have an account? <a href="/login.php<%= nextUrl ? '?next=' + encodeURIComponent(nextUrl) : '' %>">Login</a>
+        </p>
+    </div>
+</div>
+
+<%- include('partials/footer') %>
