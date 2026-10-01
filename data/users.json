@@ -1,9 +1,9 @@
 [
   {
     "id": 1,
-    "name": "PromptsClub Admin",
-    "email": "admin@promptsclub.com",
-    "password_hash": "$2b$10$EewNlWbvEitH3OLtFSCYIuo5LPNvJWzA6g22pQMcNMv8gAtAJKvoq",
+    "name": "Shivam Arya",
+    "email": "shivamarya7783@gmail.com",
+    "password_hash": "$2b$10$hAfk2/EeD.xFzWfurDRR4e3eZ8pRzmRAsnf0NyitSOwMpX8dp/qZi",
     "role": "admin",
     "is_pro": true,
     "plan_expires": "2099-12-31",

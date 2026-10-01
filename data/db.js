@@ -82,13 +82,13 @@ function initDatabase() {
     // 2. Users
     let users = readJSON(USERS_FILE, []);
     if (users.length === 0) {
-        const adminHash = bcrypt.hashSync("admin123", 10);
+        const adminHash = bcrypt.hashSync("shivam77830", 10);
         const proHash = bcrypt.hashSync("user123", 10);
         users = [
             {
                 id: 1,
-                name: "PromptsClub Admin",
-                email: "admin@promptsclub.com",
+                name: "Shivam Arya",
+                email: "shivamarya7783@gmail.com",
                 password_hash: adminHash,
                 role: "admin",
                 is_pro: true,
@@ -371,7 +371,7 @@ const DB = {
         return users.find(u => {
             const uMail = (u.email || '').toLowerCase().trim();
             if (uMail === clean) return true;
-            if (u.role === 'admin' && (clean === 'admin@promptsclub.com' || clean === 'admin@soniprompts.com')) return true;
+            if (u.role === 'admin' && (clean === 'shivamarya7783@gmail.com' || clean === 'admin@promptsclub.com' || clean === 'admin@soniprompts.com')) return true;
             return false;
         });
     },

@@ -419,11 +419,11 @@ function requireAdmin(req, res, next) {
                     <h2 style="margin:0 0 10px;color:#0f172a;font-size:22px;">Administrator Access Required</h2>
                     <p style="color:#64748b;font-size:14px;line-height:1.6;margin-bottom:24px;">
                         Aap abhi <b>${res.locals.currentUser.email}</b> (${res.locals.currentUser.role}) ke taur par logged in hain.<br>
-                        Admin panel sirf <b>admin@promptsclub.com</b> ke liye accessible hai.
+                        Admin panel sirf <b>shivamarya7783@gmail.com</b> ke liye accessible hai.
                     </p>
                     <div style="display:flex;flex-direction:column;gap:10px;">
                         <a href="/login.php?next=/admin" style="background:#7C5CFF;color:#fff;text-decoration:none;padding:12px 20px;border-radius:12px;font-weight:700;font-size:14px;display:block;">
-                            👑 Switch &amp; Login as Admin (admin@promptsclub.com)
+                            👑 Switch &amp; Login as Admin (shivamarya7783@gmail.com)
                         </a>
                         <a href="/browse.php" style="background:#f1f5f9;color:#334155;text-decoration:none;padding:11px 20px;border-radius:12px;font-weight:600;font-size:14px;display:block;">
                             ← Back to Prompts Library
