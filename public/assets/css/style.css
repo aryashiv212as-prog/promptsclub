@@ -819,11 +819,317 @@ h1, h2, h3, h4, h5 {
     background: #20BA56;
 }
 
-/* ─── Responsive Media Queries ─── */
-@media (max-width: 768px) {
-    .card-grid { grid-template-columns: 1fr; }
-    .direct-search-box { width: 100%; }
-    .direct-title-row { flex-direction: column; align-items: flex-start; }
-    .wp-floating-badge span { display: none; }
-    .wp-floating-badge { padding: 14px; border-radius: 50%; }
+/* ─── Android Bottom Navigation Bar (Hidden by default on Desktop) ─── */
+.android-bottom-nav {
+    display: none;
 }
+
+/* Touch Friendly Defaults for Mobile & Android */
+button, .btn, .pill, a, select, input {
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+}
+
+button:active, .btn:active {
+    transform: scale(0.97);
+}
+
+/* ══════════════════════════════════════════════════════════════
+   📱 ANDROID & MOBILE OPTIMIZATIONS (Native App Experience)
+   ══════════════════════════════════════════════════════════════ */
+@media (max-width: 768px) {
+    /* 1. Page & Layout Adjustments */
+    body {
+        padding-bottom: 76px !important; /* Space for Android bottom nav */
+        overflow-x: hidden;
+    }
+
+    .container {
+        padding: 0 16px;
+    }
+
+    /* 2. Top Header & Hamburger Navigation */
+    .header-inner {
+        padding: 10px 0;
+        position: relative;
+    }
+
+    .brand-text {
+        font-size: 18px;
+    }
+
+    .nav-toggle {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 44px;
+        height: 44px;
+        border-radius: 12px;
+        background: #F1F5F9;
+        font-size: 22px;
+        color: #0F172A;
+        cursor: pointer;
+        user-select: none;
+        transition: background 0.15s ease;
+    }
+
+    .nav-toggle:active {
+        background: #E2E8F0;
+    }
+
+    .main-nav {
+        display: none;
+        position: absolute;
+        top: 100%;
+        left: -16px;
+        right: -16px;
+        background: #FFFFFF;
+        border-bottom: 1.5px solid #E2E8F0;
+        box-shadow: 0 16px 36px rgba(15, 23, 42, 0.12);
+        padding: 16px 20px 22px;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 10px;
+        z-index: 1001;
+        animation: mobileMenuSlide 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .nav-toggle-cb:checked ~ .main-nav {
+        display: flex;
+    }
+
+    .main-nav a {
+        padding: 13px 16px;
+        border-radius: 12px;
+        font-size: 15px;
+        font-weight: 600;
+        color: #1E293B;
+        background: #F8FAFC;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        text-decoration: none;
+        border: 1px solid var(--border-subtle);
+    }
+
+    .main-nav a.active {
+        background: #EEF2FF;
+        color: #4F46E5;
+        border-color: #C7D2FE;
+    }
+
+    .main-nav .nav-btn {
+        background: var(--primary);
+        color: #FFFFFF !important;
+        justify-content: center;
+        text-align: center;
+    }
+
+    /* 3. Android Horizontal Swipeable Chips / Filter Pills */
+    .direct-pills, .cat-pills {
+        display: flex !important;
+        flex-wrap: nowrap !important;
+        overflow-x: auto !important;
+        -webkit-overflow-scrolling: touch !important;
+        gap: 8px !important;
+        padding-bottom: 8px !important;
+        scrollbar-width: none !important;
+        -ms-overflow-style: none !important;
+        margin: 0 -16px 16px -16px !important;
+        padding-left: 16px !important;
+        padding-right: 16px !important;
+    }
+
+    .direct-pills::-webkit-scrollbar, .cat-pills::-webkit-scrollbar {
+        display: none !important;
+    }
+
+    .pill {
+        flex-shrink: 0 !important;
+        white-space: nowrap !important;
+        padding: 8px 16px !important;
+        font-size: 13px !important;
+        border-radius: 999px !important;
+    }
+
+    /* 4. Android Card Grid */
+    .card-grid {
+        grid-template-columns: 1fr !important;
+        gap: 16px !important;
+    }
+
+    .prompt-card {
+        border-radius: 16px;
+    }
+
+    .card-info h3 {
+        font-size: 16.5px;
+        line-height: 1.35;
+    }
+
+    .card-teaser {
+        font-size: 13.5px;
+        line-height: 1.55;
+    }
+
+    .card-action .btn {
+        padding: 12px 18px;
+        font-size: 14.5px;
+        font-weight: 700;
+        border-radius: 12px;
+    }
+
+    /* 5. Android Master Prompt View */
+    .prompt-head h1 {
+        font-size: 21px !important;
+        line-height: 1.3 !important;
+    }
+
+    .copy-bar {
+        position: sticky;
+        top: 60px;
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        padding: 10px 0;
+        z-index: 95;
+        border-bottom: 1px solid var(--border-subtle);
+        margin-bottom: 14px !important;
+    }
+
+    .copy-bar button#copy-btn {
+        width: 100%;
+        padding: 12px 20px;
+        font-size: 15px;
+        border-radius: 12px;
+        box-shadow: 0 4px 14px rgba(99, 102, 241, 0.35);
+    }
+
+    .prompt-content,
+    #prompt-content,
+    .prompt-box-unlocked pre {
+        padding: 18px 16px !important;
+        font-size: 13.5px !important;
+        line-height: 1.7 !important;
+        border-radius: 14px !important;
+    }
+
+    /* 6. Native App Bottom Navigation Bar */
+    .android-bottom-nav {
+        display: flex;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 64px;
+        background: rgba(255, 255, 255, 0.97);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border-top: 1px solid var(--border-subtle);
+        z-index: 9998;
+        align-items: center;
+        justify-content: space-around;
+        padding-bottom: env(safe-area-inset-bottom, 0px);
+        box-shadow: 0 -4px 25px rgba(0, 0, 0, 0.07);
+    }
+
+    .android-nav-item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        flex: 1;
+        height: 100%;
+        color: #64748B;
+        text-decoration: none;
+        font-size: 11px;
+        font-weight: 600;
+        gap: 3px;
+        transition: all 0.15s ease;
+        -webkit-tap-highlight-color: transparent;
+    }
+
+    .android-nav-item svg {
+        transition: transform 0.15s ease;
+    }
+
+    .android-nav-item:active svg {
+        transform: scale(0.88);
+    }
+
+    .android-nav-item.active {
+        color: #4F46E5;
+        font-weight: 700;
+    }
+
+    .android-nav-item.active svg {
+        stroke: #4F46E5;
+        transform: scale(1.08);
+    }
+
+    /* 7. Reposition Floating WhatsApp Button above Android Bottom Bar */
+    .wp-floating-badge {
+        bottom: 76px !important;
+        right: 14px !important;
+        padding: 10px 14px !important;
+        font-size: 12px !important;
+        border-radius: 999px !important;
+        box-shadow: 0 4px 16px rgba(37, 211, 102, 0.4) !important;
+        z-index: 9997 !important;
+    }
+
+    .wp-floating-badge span {
+        display: inline !important;
+        font-size: 12px !important;
+        font-weight: 700 !important;
+    }
+
+    .wp-floating-badge svg {
+        width: 18px !important;
+        height: 18px !important;
+    }
+
+    /* 8. Forms & Inputs (Prevent iOS/Android Zoom Glitch) */
+    input, select, textarea {
+        font-size: 16px !important; /* Min 16px stops unwanted automatic zoom */
+    }
+
+    .fld input, .fld select, .fld textarea {
+        padding: 12px 14px;
+        border-radius: 12px;
+    }
+
+    /* 9. Tables in Admin & Account */
+    table {
+        min-width: 580px;
+    }
+
+    /* 10. Footer spacing on mobile */
+    .footer-grid {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 20px;
+    }
+
+    .footer-nav {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+    }
+
+    .footer-dot {
+        display: none;
+    }
+}
+
+@keyframes mobileMenuSlide {
+    from {
+        opacity: 0;
+        transform: translateY(-8px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+

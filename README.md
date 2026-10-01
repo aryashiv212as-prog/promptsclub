@@ -64,7 +64,7 @@ Built with **Node.js, Express, EJS, and Vanilla CSS** with PayPal integration, A
 - **$5/month or ₹499/month** membership card.
 - Checklist of benefits and features.
 - Trust badges (Secure payments, Instant access, Cancel anytime).
-- WhatsApp support link (`+91 91314 21048`).
+- WhatsApp support link (`+91 9341266089`).
 - Instant 1-click Pro subscription activation (with Razorpay ready endpoints).
 
 ### 6. User Authentication & Dashboard

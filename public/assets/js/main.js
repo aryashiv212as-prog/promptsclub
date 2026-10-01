@@ -94,6 +94,9 @@
         var showCopied = function () {
             copyBtn.textContent = '✅ Copied!';
             copyBtn.classList.add('btn-copied');
+            if (window.navigator && window.navigator.vibrate) {
+                try { window.navigator.vibrate(40); } catch (e) {}
+            }
             // Toast popup
             var toast = document.createElement('div');
             toast.className = 'copy-toast';
@@ -259,10 +262,17 @@
                 msg.style.color = '#DC2626';
                 msg.innerHTML = (prevError || 'We could not confirm your payment automatically.') +
                     '<br><br><strong>If money was deducted, don\'t worry — your access will be activated.</strong><br>' +
-                    'Message us on WhatsApp: <a href="https://wa.me/919131421048" target="_blank" style="color:#16A34A;font-weight:700;">+91 91314 21048</a>';
+                    'Message us on WhatsApp: <a href="https://wa.me/919341266089" target="_blank" style="color:#16A34A;font-weight:700;">+91 9341266089</a>';
             }
             payBtn.disabled = false;
             payBtn.textContent = 'Try Again';
         }
+    }
+
+    // Android PWA Service Worker Registration
+    if ('serviceWorker' in navigator && window.location.protocol.startsWith('http')) {
+        window.addEventListener('load', function () {
+            navigator.serviceWorker.register('/sw.js').catch(function () {});
+        });
     }
 })();
