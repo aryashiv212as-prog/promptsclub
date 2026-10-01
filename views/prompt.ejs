@@ -66,6 +66,11 @@
                     <span style="font-size:14px; font-weight:700; color:#111827; text-transform:uppercase; letter-spacing:0.04em;">📋 Master Prompt System</span>
                 </div>
                 <div style="display:flex; gap:10px; align-items:center;">
+                    <% if (currentUser && currentUser.role === 'admin') { %>
+                        <a href="/admin/edit-prompt/<%= prompt.id %>" class="btn btn-sm" style="background:#6366f1; color:#fff; font-weight:700; padding:8px 14px; text-decoration:none; border-radius:10px; font-size:13px;">
+                            ✏️ Edit Prompt
+                        </a>
+                    <% } %>
                     <button type="button" class="btn btn-primary" id="copy-btn" style="padding:9px 20px; font-size:14px; font-weight:700; border-radius:10px;">
                         📋 Copy Prompt
                     </button>

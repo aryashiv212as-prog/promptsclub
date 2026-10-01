@@ -466,6 +466,44 @@ app.post('/admin/new-prompt', requireAdmin, upload.single('image_file'), (req, r
     res.redirect('/admin');
 });
 
+app.get('/admin/edit-prompt/:id', requireAdmin, (req, res) => {
+    const prompt = DB.getPromptById(req.params.id);
+    if (!prompt) return res.redirect('/admin');
+    res.render('admin_edit_prompt', {
+        pageTitle: `Edit Prompt: ${prompt.title}`,
+        prompt: prompt
+    });
+});
+
+app.post('/admin/edit-prompt/:id', requireAdmin, upload.single('image_file'), (req, res) => {
+    const prompt = DB.getPromptById(req.params.id);
+    if (!prompt) return res.redirect('/admin');
+
+    const { title, category, type, image_url, teaser, master_prompt, compatible_tools, tags } = req.body;
+
+    let finalImage = prompt.image || '/assets/img/cover.jpg';
+    if (req.file) {
+        finalImage = '/uploads/' + req.file.filename;
+    } else if (image_url && image_url.trim()) {
+        finalImage = image_url.trim();
+    }
+
+    const toolsList = (compatible_tools || '').split(',').map(s => s.trim()).filter(Boolean);
+    const tagsList = (tags || '').split(',').map(s => s.trim().replace(/^#/, '')).filter(Boolean);
+
+    prompt.title = (title || prompt.title).trim();
+    prompt.category = category || prompt.category;
+    prompt.type = type || prompt.type;
+    prompt.image = finalImage;
+    prompt.teaser = teaser || '';
+    prompt.master_prompt = master_prompt || '';
+    prompt.compatible_tools = toolsList;
+    prompt.tags = tagsList;
+
+    DB.savePrompt(prompt);
+    res.redirect('/admin?saved=prompt');
+});
+
 app.post('/admin/delete-prompt', requireAdmin, (req, res) => {
     const id = req.body.prompt_id;
     if (id) DB.deletePrompt(id);
