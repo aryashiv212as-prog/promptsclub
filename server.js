@@ -479,28 +479,23 @@ app.get('/admin/new-prompt', requireAdmin, (req, res) => {
 });
 
 app.post('/admin/new-prompt', requireAdmin, upload.single('image_file'), (req, res) => {
-    const { title, category, type, image_url, teaser, master_prompt, compatible_tools, tags } = req.body;
+    const { title, category, type, master_prompt } = req.body;
     
     let finalImage = '/assets/img/cover.jpg';
     if (req.file) {
         finalImage = '/uploads/' + req.file.filename;
-    } else if (image_url && image_url.trim()) {
-        finalImage = image_url.trim();
     }
 
-    const toolsList = (compatible_tools || '').split(',').map(s => s.trim()).filter(Boolean);
-    const tagsList = (tags || '').split(',').map(s => s.trim().replace(/^#/, '')).filter(Boolean);
-
     DB.savePrompt({
-        title: title.trim(),
+        title: (title || 'New Master Prompt').trim(),
         category: category || 'General',
         type: type || 'premium',
         image: finalImage,
         created_at: new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }),
-        teaser: teaser || '',
+        teaser: "This premium prompt includes the complete master prompt system — full scene structure, camera angles, timing breakdown, captions, viral hooks and reference storyboard images. Everything is ready to copy and paste into your AI video tool.",
         master_prompt: master_prompt || '',
-        compatible_tools: toolsList,
-        tags: tagsList,
+        compatible_tools: ["Kling AI 1.5", "Runway Gen-3", "Seedance", "Luma Dream Machine"],
+        tags: [category || "General", "AI Video", "Viral Reel", "4K Ultra-HD", "Master Prompt"],
         views: 1,
         likes: 0
     });
@@ -521,26 +516,16 @@ app.post('/admin/edit-prompt/:id', requireAdmin, upload.single('image_file'), (r
     const prompt = DB.getPromptById(req.params.id);
     if (!prompt) return res.redirect('/admin');
 
-    const { title, category, type, image_url, teaser, master_prompt, compatible_tools, tags } = req.body;
+    const { title, category, type, master_prompt } = req.body;
 
-    let finalImage = prompt.image || '/assets/img/cover.jpg';
     if (req.file) {
-        finalImage = '/uploads/' + req.file.filename;
-    } else if (image_url && image_url.trim()) {
-        finalImage = image_url.trim();
+        prompt.image = '/uploads/' + req.file.filename;
     }
 
-    const toolsList = (compatible_tools || '').split(',').map(s => s.trim()).filter(Boolean);
-    const tagsList = (tags || '').split(',').map(s => s.trim().replace(/^#/, '')).filter(Boolean);
-
     prompt.title = (title || prompt.title).trim();
-    prompt.category = category || prompt.category;
-    prompt.type = type || prompt.type;
-    prompt.image = finalImage;
-    prompt.teaser = teaser || '';
-    prompt.master_prompt = master_prompt || '';
-    prompt.compatible_tools = toolsList;
-    prompt.tags = tagsList;
+    if (category) prompt.category = category;
+    if (type) prompt.type = type;
+    if (master_prompt !== undefined) prompt.master_prompt = master_prompt;
 
     DB.savePrompt(prompt);
     res.redirect('/admin?saved=prompt');

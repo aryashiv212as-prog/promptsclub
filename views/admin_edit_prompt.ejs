@@ -16,13 +16,13 @@
         <form method="post" action="/admin/edit-prompt/<%= prompt.id %>" enctype="multipart/form-data">
             
             <div class="fld">
-                <label>Prompt Title</label>
+                <label style="font-weight:700;font-size:14px;">Prompt Title</label>
                 <input type="text" name="title" required value="<%= prompt.title %>" style="font-weight:600;font-size:15px;">
             </div>
 
             <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
                 <div class="fld">
-                    <label>Category</label>
+                    <label style="font-weight:700;font-size:14px;">Category</label>
                     <% const categories = ["Animal & Pets", "Art & Animation", "ASMR & Satisfying", "Comedy & Entertainment", "DIY & Crafts", "Emotional & Inspirational", "Fantasy & Sci-Fi", "Food & Cooking", "Historical & Nostalgia", "Kids & Family", "Nature & Wildlife", "Sports & Action", "General"]; %>
                     <select name="category" required style="width:100%;padding:11px 14px;border:1.5px solid var(--border);border-radius:12px;background:#fff;font-family:inherit;font-size:14px;">
                         <% categories.forEach(function(cat) { %>
@@ -31,7 +31,7 @@
                     </select>
                 </div>
                 <div class="fld">
-                    <label>Type / Access Level</label>
+                    <label style="font-weight:700;font-size:14px;">Type / Access Level</label>
                     <select name="type" required style="width:100%;padding:11px 14px;border:1.5px solid var(--border);border-radius:12px;background:#fff;font-family:inherit;font-size:14px;">
                         <option value="premium" <%= prompt.type === 'premium' ? 'selected' : '' %>>⭐ Premium (Subscribers only)</option>
                         <option value="free" <%= prompt.type === 'free' ? 'selected' : '' %>>🎁 Free (Public / Logged-in Free users)</option>
@@ -40,39 +40,23 @@
             </div>
 
             <div class="fld">
-                <label>Thumbnail Storyboard Image</label>
-                <div style="display:flex;gap:16px;align-items:center;margin-bottom:10px;background:#f8fafc;padding:12px;border-radius:10px;border:1px solid var(--border);">
-                    <img src="<%= prompt.image %>" alt="Current Image" style="width:80px;height:55px;object-fit:cover;border-radius:8px;border:1px solid #cbd5e1;" onerror="this.src='/assets/img/cover.jpg'">
+                <label style="font-weight:700;font-size:14px;">Thumbnail Storyboard Image (Choose File)</label>
+                <div style="display:flex;align-items:center;gap:16px;margin-bottom:12px;background:#f8fafc;padding:12px 16px;border-radius:12px;border:1px solid var(--border);">
+                    <img src="<%= prompt.image %>" alt="Current Image" style="width:84px;height:56px;object-fit:cover;border-radius:8px;border:1px solid #cbd5e1;" onerror="this.src='/assets/img/cover.jpg'">
                     <div>
-                        <span style="font-size:12.5px;color:var(--muted);display:block;">Current image:</span>
-                        <code style="font-size:12px;color:var(--text);word-break:break-all;"><%= prompt.image %></code>
+                        <span style="font-size:13px;font-weight:600;color:var(--text);display:block;">Current Thumbnail Frame</span>
+                        <span style="font-size:12px;color:var(--muted);">Upload a new file below if you want to replace it.</span>
                     </div>
                 </div>
-                <input type="file" name="image_file" accept="image/*" style="margin-bottom:8px;">
-                <input type="text" name="image_url" value="<%= prompt.image %>" placeholder="Or enter new image URL">
+                <input type="file" name="image_file" accept="image/*" style="width:100%;padding:10px 14px;border:1.5px dashed var(--border);border-radius:12px;background:#f8fafc;cursor:pointer;">
             </div>
 
-            <div class="fld">
-                <label>Teaser Description (Shown in locked preview)</label>
-                <textarea name="teaser" rows="3" placeholder="Brief teaser about what this prompt includes..."><%= prompt.teaser || '' %></textarea>
-            </div>
-
-            <div class="fld">
-                <label style="display:flex;justify-content:space-between;align-items:center;">
-                    <span>Full Master Prompt System &amp; Scene Breakdown</span>
-                    <span style="font-size:12px;font-weight:normal;color:var(--muted);">Displayed in pure black text on white background</span>
+            <div class="fld" style="margin-top:20px;">
+                <label style="display:flex;justify-content:space-between;align-items:center;font-weight:700;font-size:14px;">
+                    <span>Master Prompt</span>
+                    <span style="font-size:12px;font-weight:normal;color:var(--muted);">Pure black text on white background</span>
                 </label>
-                <textarea name="master_prompt" rows="18" required placeholder="Paste full master prompt instructions, scene breakdown, camera angles, and negative prompts..." style="font-family:'Inter', system-ui, sans-serif;font-size:14px;line-height:1.75;padding:16px;"><%= prompt.master_prompt || '' %></textarea>
-            </div>
-
-            <div class="fld">
-                <label>Compatible AI Video Tools (comma separated)</label>
-                <input type="text" name="compatible_tools" value="<%= (prompt.compatible_tools || []).join(', ') %>">
-            </div>
-
-            <div class="fld">
-                <label>Keywords / Tags (comma separated)</label>
-                <input type="text" name="tags" value="<%= (prompt.tags || []).join(', ') %>">
+                <textarea name="master_prompt" rows="18" required placeholder="Paste master prompt instructions here..." style="font-family:'Inter', system-ui, sans-serif;font-size:14px;line-height:1.75;padding:16px;width:100%;border-radius:12px;border:1.5px solid var(--border);"><%= prompt.master_prompt || '' %></textarea>
             </div>
 
             <div style="display:flex;justify-content:space-between;align-items:center;margin-top:30px;padding-top:20px;border-top:1px solid var(--border);">

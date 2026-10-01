@@ -1,23 +1,23 @@
 <%- include('partials/header') %>
 
-<div class="container" style="padding-top:40px;padding-bottom:60px;max-width:800px;">
+<div class="container" style="padding-top:40px;padding-bottom:60px;max-width:850px;">
 
     <a href="/admin" class="back-link">← Back to Admin Dashboard</a>
 
-    <h1 class="section-title" style="margin-top:16px;">Add New Prompt</h1>
+    <h1 class="section-title" style="margin-top:16px;">Add New Master Prompt</h1>
     <p class="section-sub">Publish a new viral AI video prompt to the library</p>
 
     <div style="background:#fff;border-radius:var(--radius);padding:30px;border:1.5px solid var(--border);box-shadow:var(--shadow-sm);margin-top:20px;">
         <form method="post" action="/admin/new-prompt" enctype="multipart/form-data">
             
             <div class="fld">
-                <label>Prompt Title</label>
-                <input type="text" name="title" required placeholder="e.g. 30s CYBERPUNK CHASE ENGINE — MASTER PROMPT v1.0">
+                <label style="font-weight:700;font-size:14px;">Prompt Title</label>
+                <input type="text" name="title" required placeholder="e.g. WILD RESCUE ENGINE — MASTER PROMPT v1.0" style="font-weight:600;font-size:15px;">
             </div>
 
             <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
                 <div class="fld">
-                    <label>Category</label>
+                    <label style="font-weight:700;font-size:14px;">Category</label>
                     <select name="category" required style="width:100%;padding:11px 14px;border:1.5px solid var(--border);border-radius:12px;background:#fff;font-family:inherit;font-size:14px;">
                         <option value="Animal & Pets">Animal &amp; Pets</option>
                         <option value="Art & Animation">Art &amp; Animation</option>
@@ -35,7 +35,7 @@
                     </select>
                 </div>
                 <div class="fld">
-                    <label>Type / Access Level</label>
+                    <label style="font-weight:700;font-size:14px;">Type / Access Level</label>
                     <select name="type" required style="width:100%;padding:11px 14px;border:1.5px solid var(--border);border-radius:12px;background:#fff;font-family:inherit;font-size:14px;">
                         <option value="premium" selected>⭐ Premium (Subscribers only)</option>
                         <option value="free">🎁 Free (Public / Logged-in Free users)</option>
@@ -44,34 +44,21 @@
             </div>
 
             <div class="fld">
-                <label>Thumbnail Storyboard Image (Upload File OR specify Image URL)</label>
-                <input type="file" name="image_file" accept="image/*" style="margin-bottom:8px;">
-                <input type="text" name="image_url" placeholder="Or enter image URL (e.g. /uploads/banner.png or https://...)">
+                <label style="font-weight:700;font-size:14px;">Thumbnail Storyboard Image (Choose File)</label>
+                <input type="file" name="image_file" accept="image/*" required style="width:100%;padding:10px 14px;border:1.5px dashed var(--border);border-radius:12px;background:#f8fafc;cursor:pointer;">
             </div>
 
-            <div class="fld">
-                <label>Teaser Description (Shown in locked preview)</label>
-                <textarea name="teaser" rows="2" placeholder="Brief teaser about what this prompt includes...">This premium prompt includes the complete master prompt system — full scene structure, camera angles, timing breakdown, captions, viral hooks and reference storyboard images.</textarea>
+            <div class="fld" style="margin-top:20px;">
+                <label style="display:flex;justify-content:space-between;align-items:center;font-weight:700;font-size:14px;">
+                    <span>Master Prompt</span>
+                    <span style="font-size:12px;font-weight:normal;color:var(--muted);">Pure black text on white background</span>
+                </label>
+                <textarea name="master_prompt" rows="18" required placeholder="Paste full master prompt instructions here..." style="font-family:'Inter', system-ui, sans-serif;font-size:14px;line-height:1.75;padding:16px;width:100%;border-radius:12px;border:1.5px solid var(--border);"></textarea>
             </div>
 
-            <div class="fld">
-                <label>Full Master Prompt System &amp; Scene Breakdown</label>
-                <textarea name="master_prompt" rows="12" required placeholder="Paste full master prompt instructions, scene breakdown, camera angles, and negative prompts..." style="font-family:monospace;font-size:13px;line-height:1.5;"></textarea>
-            </div>
-
-            <div class="fld">
-                <label>Compatible AI Video Tools (comma separated)</label>
-                <input type="text" name="compatible_tools" value="Kling AI 1.5, Runway Gen-3, Seedance, Luma Dream Machine, Hailuo / Minimax">
-            </div>
-
-            <div class="fld">
-                <label>Keywords / Tags (comma separated)</label>
-                <input type="text" name="tags" value="AI Video, Viral Reel, TikTok, Kling AI, 4K Ultra-HD, Master Prompt">
-            </div>
-
-            <div style="display:flex;justify-content:flex-end;gap:12px;margin-top:24px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-top:30px;padding-top:20px;border-top:1px solid var(--border);">
                 <a href="/admin" class="btn btn-outline">Cancel</a>
-                <button type="submit" class="btn btn-primary btn-lg">Publish Prompt</button>
+                <button type="submit" class="btn btn-primary btn-lg" style="padding:12px 32px;font-size:15px;font-weight:700;">Publish Prompt</button>
             </div>
 
         </form>
