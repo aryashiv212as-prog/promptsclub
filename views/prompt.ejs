@@ -70,7 +70,7 @@
                         📋 Copy Prompt
                     </button>
                     <% if (currentUser) { %>
-                        <button type="button" class="btn btn-outline btn-sm" id="bookmark-btn" onclick="toggleBookmark(<%= prompt.id %>)">
+                        <button type="button" class="btn btn-outline btn-sm" id="bookmark-btn" data-id="<%= prompt.id %>" onclick="toggleBookmark(this.getAttribute('data-id'))">
                             <%= (currentUser.bookmarks && currentUser.bookmarks.includes(prompt.id)) ? '❤️ Saved' : '🤍 Bookmark' %>
                         </button>
                     <% } %>

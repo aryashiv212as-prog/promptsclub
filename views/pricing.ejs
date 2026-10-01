@@ -146,8 +146,8 @@ if (window.paypal) {
                 purchase_units: [{
                     description: "PromptsClub Pro Access (promptsclub.com)",
                     amount: {
-                        currency_code: '<%= (typeof settings !== 'undefined' && settings.paypal_currency) ? settings.paypal_currency : "USD" %>',
-                        value: '<%= (typeof settings !== 'undefined' && settings.price_monthly) ? settings.price_monthly : "5" %>'
+                        currency_code: "<%= (typeof settings !== 'undefined' && settings.paypal_currency) ? settings.paypal_currency : 'USD' %>",
+                        value: "<%= (typeof settings !== 'undefined' && settings.price_monthly) ? settings.price_monthly : '5' %>"
                     }
                 }]
             });
