@@ -68,14 +68,14 @@ function initDatabase() {
         domain: "promptsclub.com",
         author_name: "PromptsClub",
         tagline: "Viral AI video prompts library — promptsclub.com",
-        price_monthly: 5,
+        price_monthly: 10,
         price_currency: "$",
         paypal_currency: "USD",
-        paypal_client_id: "sb",
-        paypal_mode: "sandbox",
-        price_inr: 499,
-        whatsapp_number: "+919131421048",
-        whatsapp_display: "+91 91314 21048"
+        paypal_client_id: "BAActOc_BqVIzW1R-ONYs4X0ck3sDIIvnWzPPgCOYBWUyGn-25JLDg-W_DhEFSE7HuCYClxtzC4lqdaIxk",
+        paypal_mode: "live",
+        price_inr: 899,
+        whatsapp_number: "919341266089",
+        whatsapp_display: "+91 9341266089"
     };
     readJSON(SETTINGS_FILE, defaultSettings);
 
@@ -368,12 +368,7 @@ const DB = {
     getUserByEmail: (email) => {
         const users = readJSON(USERS_FILE, []);
         const clean = (email || '').toLowerCase().trim();
-        return users.find(u => {
-            const uMail = (u.email || '').toLowerCase().trim();
-            if (uMail === clean) return true;
-            if (u.role === 'admin' && (clean === 'shivamarya7783@gmail.com' || clean === 'admin@promptsclub.com' || clean === 'admin@soniprompts.com')) return true;
-            return false;
-        });
+        return users.find(u => (u.email || '').toLowerCase().trim() === clean);
     },
     saveUser: (user) => {
         const users = readJSON(USERS_FILE, []);

@@ -644,7 +644,6 @@ app.listen(PORT, () => {
     console.log(`👉 Community: http://localhost:${PORT}/community.php`);
     console.log(`👉 Pricing: http://localhost:${PORT}/pricing.php`);
     console.log(`👉 Admin Dashboard: http://localhost:${PORT}/admin`);
-    console.log(`👑 Admin Credentials: admin@promptsclub.com / admin123`);
-    console.log(`⭐ Pro User Credentials: pro@example.com / user123`);
+    console.log(`👑 Admin Credentials: shivamarya7783@gmail.com / shivam77830`);
     console.log(`====================================================`);
 });

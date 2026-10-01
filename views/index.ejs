@@ -9,8 +9,8 @@
     <div style="margin-bottom: 24px;">
         <div class="direct-pills">
             <a href="/browse.php" class="pill active">All Prompts (<%= totalPrompts %>)</a>
-            <a href="/browse.php?type=free" class="pill">🎁 Free Prompt (1)</a>
-            <a href="/browse.php?type=premium" class="pill">⭐ Premium Prompts (19)</a>
+            <a href="/browse.php?type=free" class="pill">🎁 Free Prompts</a>
+            <a href="/browse.php?type=premium" class="pill">⭐ Premium Prompts</a>
             <% categories.forEach(function(c) { %>
                 <a href="/browse.php?cat=<%= encodeURIComponent(c.name) %>" class="pill">
                     <%= c.name %> (<%= c.count %>)

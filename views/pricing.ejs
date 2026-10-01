@@ -37,7 +37,7 @@
             </div>
 
             <div style="margin:16px 0 20px;">
-                <span style="font-size:36px; font-weight:800; color:var(--text);"><%= (typeof settings !== 'undefined' && settings.price_currency) ? settings.price_currency : '$' %><%= (typeof settings !== 'undefined' && settings.price_monthly) ? settings.price_monthly : 5 %></span>
+                <span style="font-size:36px; font-weight:800; color:var(--text);"><%= (typeof settings !== 'undefined' && settings.price_currency) ? settings.price_currency : '$' %><%= (typeof settings !== 'undefined' && settings.price_monthly) ? settings.price_monthly : 10 %></span>
                 <span style="color:var(--text-muted); font-size:15px; font-weight:600;">/month</span>
                 <p style="font-size:13px; color:var(--green); font-weight:600; margin-top:4px;">⚡ Instant automatic activation upon checkout</p>
             </div>
@@ -147,7 +147,7 @@ if (window.paypal) {
                     description: "PromptsClub Pro Access (promptsclub.com)",
                     amount: {
                         currency_code: "<%= (typeof settings !== 'undefined' && settings.paypal_currency) ? settings.paypal_currency : 'USD' %>",
-                        value: "<%= (typeof settings !== 'undefined' && settings.price_monthly) ? settings.price_monthly : '5' %>"
+                        value: "<%= (typeof settings !== 'undefined' && settings.price_monthly) ? settings.price_monthly : '10' %>"
                     }
                 }]
             });
